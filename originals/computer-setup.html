@@ -1,0 +1,367 @@
+<div class="support-form">
+  <h2>Настройка рабочего компьютера дизайнера</h2>
+  <p class="hint">
+    Введите имя компьютера, проверьте пункты и скопируйте готовую тему и описание в заявку поддержки.
+  </p>
+
+  <div class="field">
+    <label for="pcName">Имя компьютера</label>
+    <input id="pcName" type="text" placeholder="VRN-2722">
+  </div>
+
+  <h3>Софт для дизайнера</h3>
+
+  <label class="check">
+    <input type="checkbox" class="software" value="Adobe Photoshop" checked>
+    Adobe Photoshop
+  </label>
+
+  <label class="check">
+    <input type="checkbox" class="software" value="Adobe Illustrator" checked>
+    Adobe Illustrator
+  </label>
+
+  <h3>Доступы на чтение и запись</h3>
+
+  <label class="check">
+    <input type="checkbox" class="rwAccess" value="Y:\dek" checked>
+    Y:\dek
+  </label>
+
+  <label class="check">
+    <input type="checkbox" class="rwAccess" value="Y:\oot\Документы" checked>
+    Y:\oot\Документы
+  </label>
+
+  <label class="check">
+    <input type="checkbox" class="rwAccess" value="\\corp.samsonopt.ru\dfsroot\OOT-DEK" checked>
+    \\corp.samsonopt.ru\dfsroot\OOT-DEK
+  </label>
+
+  <label class="check">
+    <input type="checkbox" class="rwAccess" value="\\vrn-1920\datadek\OOT DEK archive" checked>
+    \\vrn-1920\datadek\OOT DEK archive
+  </label>
+
+  <label class="check">
+    <input type="checkbox" class="rwAccess" value="C:\Program Files\Adobe" checked>
+    C:\Program Files\Adobe
+  </label>
+
+  <label class="check">
+    <input type="checkbox" class="rwAccess" value="C:\Program Files (x86)\Common Files\Adobe" checked>
+    C:\Program Files (x86)\Common Files\Adobe
+  </label>
+
+  <h3>Доступы только на чтение</h3>
+
+  <label class="check">
+    <input type="checkbox" class="readAccess" value="\\corp.samsonopt.ru\dfsroot\OBM\PRINT" checked>
+    \\corp.samsonopt.ru\dfsroot\OBM\PRINT
+  </label>
+
+  <h3>Принтер</h3>
+
+  <label class="check">
+    <input id="needPrinter" type="checkbox" checked>
+    Подключить местный принтер PRINTER208
+  </label>
+
+  <hr>
+
+  <h3>Текст для заявки</h3>
+
+  <div class="field">
+    <label for="requestTheme">Тема</label>
+    <input id="requestTheme" type="text" readonly placeholder="Тема появится автоматически">
+  </div>
+
+  <div class="field">
+    <label for="requestDescription">Подробное описание</label>
+    <textarea id="requestDescription" readonly placeholder="Готовый текст появится автоматически"></textarea>
+  </div>
+
+  <div class="copy-row">
+    <button type="button" class="copy-btn" onclick="copyField('requestTheme')">
+      Скопировать тему
+    </button>
+
+    <button type="button" class="copy-btn" onclick="copyField('requestDescription')">
+      Скопировать описание
+    </button>
+  </div>
+</div>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 20px;
+    background: #f3f3f3;
+    font-family: Arial, sans-serif;
+    color: #111111;
+  }
+
+  .support-form {
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 16px;
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 12px;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+  }
+
+  .support-form h2 {
+    margin: 0 0 16px;
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  .support-form h3 {
+    margin: 22px 0 12px;
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  .hint {
+    margin: 0 0 22px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #555555;
+  }
+
+  .field {
+    margin-bottom: 14px;
+  }
+
+  .field label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    background: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #111111;
+    outline: none;
+  }
+
+  input[type="text"]:focus,
+  textarea:focus {
+    border-color: #999999;
+  }
+
+  #requestDescription {
+    height: 240px;
+    resize: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .check {
+    display: block;
+    margin: 9px 0;
+    font-size: 14px;
+    line-height: 1.4;
+    cursor: pointer;
+  }
+
+  .check input {
+    margin-right: 8px;
+    vertical-align: -1px;
+  }
+
+  .copy-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .copy-btn {
+    width: 100%;
+    padding: 11px 14px;
+    border: 0;
+    border-radius: 8px;
+    background: #e9e9e9;
+    color: #111111;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .copy-btn:hover {
+    background: #dddddd;
+  }
+
+  hr {
+    margin: 22px 0 18px;
+    border: 0;
+    border-top: 1px solid #e1e1e1;
+  }
+
+  @media (max-width: 520px) {
+    body {
+      padding: 10px;
+    }
+
+    .support-form {
+      padding: 14px;
+    }
+
+    .copy-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  function getCheckedValues(selector) {
+    return Array.from(document.querySelectorAll(selector + ':checked')).map(function(item) {
+      return item.value;
+    });
+  }
+
+  function getPcNameText() {
+    const pcName = document.getElementById('pcName').value.trim();
+    return pcName || '[укажите имя компьютера]';
+  }
+
+  function generateTheme(pcName, software, rwAccess, readAccess, needPrinter) {
+    const parts = [];
+
+    if (software.length) {
+      parts.push('установка софта');
+    }
+
+    if (rwAccess.length || readAccess.length) {
+      parts.push('доступы');
+    }
+
+    if (needPrinter) {
+      parts.push('принтер');
+    }
+
+    let theme = 'Настройка рабочего компьютера дизайнера';
+
+    if (parts.length) {
+      theme += ': ' + parts.join(', ');
+    }
+
+    if (pcName) {
+      theme += ' — ' + pcName;
+    }
+
+    return theme;
+  }
+
+  function generateRequest() {
+    const pcName = document.getElementById('pcName').value.trim();
+    const pcNameText = getPcNameText();
+
+    const software = getCheckedValues('.software');
+    const rwAccess = getCheckedValues('.rwAccess');
+    const readAccess = getCheckedValues('.readAccess');
+    const needPrinter = document.getElementById('needPrinter').checked;
+
+    const theme = generateTheme(pcName, software, rwAccess, readAccess, needPrinter);
+
+    let text = 'Добрый день.\n\n';
+
+    if (software.length) {
+      text += 'Прошу установить на компьютер ' + pcNameText + ' софт:\n';
+
+      software.forEach(function(item) {
+        text += '- ' + item + '\n';
+      });
+
+      text += '\n';
+    }
+
+    if (rwAccess.length || readAccess.length) {
+      text += 'Прошу выдать доступы к папкам и всем подпапкам.\n\n';
+    }
+
+    if (rwAccess.length) {
+      text += 'На чтение и запись:\n';
+
+      rwAccess.forEach(function(item) {
+        text += '- ' + item + '\n';
+      });
+
+      text += '\n';
+    }
+
+    if (readAccess.length) {
+      text += 'Только на чтение:\n';
+
+      readAccess.forEach(function(item) {
+        text += '- ' + item + '\n';
+      });
+
+      text += '\n';
+    }
+
+    if (needPrinter) {
+      text += 'Также прошу подключить местный принтер PRINTER208 на компьютер ' + pcNameText + '.\n\n';
+    }
+
+    text += 'Спасибо.';
+
+    document.getElementById('requestTheme').value = theme;
+    document.getElementById('requestDescription').value = text;
+  }
+
+  function copyTextToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+
+    const temp = document.createElement('textarea');
+    temp.value = text;
+    temp.style.position = 'fixed';
+    temp.style.left = '-9999px';
+    document.body.appendChild(temp);
+    temp.focus();
+    temp.select();
+    document.execCommand('copy');
+    document.body.removeChild(temp);
+
+    return Promise.resolve();
+  }
+
+  function copyField(fieldId) {
+    generateRequest();
+
+    const field = document.getElementById(fieldId);
+    copyTextToClipboard(field.value);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    generateRequest();
+
+    const controls = document.querySelectorAll('input');
+
+    controls.forEach(function(control) {
+      control.addEventListener('input', generateRequest);
+      control.addEventListener('change', generateRequest);
+    });
+  });
+</script>

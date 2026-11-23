@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Генератор служебной записки А4</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f3f3;
+      color: #111;
+    }
+
+    .app {
+      width: 100%;
+      min-height: 100vh;
+      padding: 10px;
+    }
+
+    .panel {
+      width: 100%;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 14px;
+      padding: 16px;
+      height: fit-content;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .hint {
+      margin: 0 0 18px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: #666;
+    }
+
+    label {
+      display: block;
+      margin: 14px 0 6px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid #cfcfcf;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: 14px/1.4 Arial, sans-serif;
+      outline: none;
+      background: #fff;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 58px;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #9a9a9a;
+      opacity: 1;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #111;
+    }
+
+    .phrase-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .place-grid {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .phrase-prefix,
+    .place-prefix {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      font: 700 15px/1 Arial, sans-serif;
+      color: #111;
+      white-space: nowrap;
+    }
+
+    .phrase-grid input,
+    .place-grid textarea {
+      min-height: 42px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .mail-block {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid #e6e6e6;
+    }
+
+    .mail-title {
+      margin: 0 0 10px;
+      font-size: 16px;
+      line-height: 1.25;
+      font-weight: 700;
+    }
+
+    .mail-label {
+      display: block;
+      margin: 12px 0 6px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .mail-output {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid #d7d7d7;
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #f7f7f7;
+      font: 14px/1.45 Arial, sans-serif;
+      color: #111;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .mail-output.is-empty {
+      color: #999;
+    }
+
+    .copy-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .copy-button {
+      background: #e9e9e9;
+      color: #111;
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      margin-top: 18px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font: 700 14px/1 Arial, sans-serif;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: #111;
+      color: #fff;
+    }
+
+    .secondary {
+      background: #e9e9e9;
+      color: #111;
+    }
+
+    .hidden-canvas {
+      position: fixed;
+      left: -99999px;
+      top: -99999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @media (max-width: 980px) {
+      .app {
+        padding: 10px;
+      }
+
+      .panel {
+        padding: 14px;
+      }
+    }
+  </style>
+<link rel="stylesheet" href="../assets/embed.css">
+<script src="../assets/embed.js" defer></script>
+</head>
+<body>
+  <main class="app">
+    <section class="panel">
+      <h1>Служебная записка А4</h1>
+      <p class="hint">Заполни поля. Серые подсказки в полях — это только пример, в документ они не попадают.</p>
+
+      <div class="row">
+        <div>
+          <label for="memoNumber">Номер записки</label>
+          <input id="memoNumber" placeholder="1543 - ООТ" />
+        </div>
+        <div>
+          <label for="memoDate">Дата записки</label>
+          <input id="memoDate" placeholder="01.08.2025" />
+        </div>
+      </div>
+
+      <label for="position">Должность</label>
+      <input id="position" placeholder="Художник-дизайнер" />
+
+      <label for="fio">ФИО / инициалы</label>
+      <input id="fio" placeholder="Иванов И.И." />
+
+      <label for="phone">Номер телефона</label>
+      <input id="phone" placeholder="+7 000 000 00 00" />
+
+      <label for="item">Что нужно переместить</label>
+      <div class="phrase-grid">
+        <div class="phrase-prefix" aria-hidden="true">перемещение</div>
+        <input id="item" placeholder="ноутбука" />
+      </div>
+
+      <label for="fromPlace">Откуда</label>
+      <div class="place-grid">
+        <div class="place-prefix" aria-hidden="true">из</div>
+        <textarea id="fromPlace" placeholder="сервисного центра"></textarea>
+      </div>
+
+      <label for="toPlace">Куда</label>
+      <div class="place-grid">
+        <div class="place-prefix" aria-hidden="true">в</div>
+        <textarea id="toPlace" placeholder="Доп. офис №5 этаж 3 каб.6"></textarea>
+      </div>
+
+      <label for="ticket">Номер заявки</label>
+      <input id="ticket" placeholder="SER-293357" />
+
+      <div class="actions">
+        <button class="primary" id="downloadBtn" type="button">Скачать документ</button>
+      </div>
+
+      <div class="mail-block">
+        <h2 class="mail-title">Текст для письма</h2>
+
+        <span class="mail-label">Тема</span>
+        <div class="mail-output is-empty" id="emailSubject">Заполни поля выше</div>
+
+        <span class="mail-label">Тело письма</span>
+        <div class="mail-output is-empty" id="emailBody">Заполни поля выше</div>
+
+        <div class="copy-actions">
+          <button class="copy-button" id="copySubjectBtn" type="button">Скопировать тему</button>
+          <button class="copy-button" id="copyBodyBtn" type="button">Скопировать текст</button>
+        </div>
+      </div>
+    </section>
+
+    <canvas class="hidden-canvas" id="a4Canvas" width="2480" height="3508"></canvas>
+  </main>
+
+  <script>
+    const canvas = document.getElementById('a4Canvas');
+    const ctx = canvas.getContext('2d');
+
+    const A4_WIDTH = 2480;
+    const A4_HEIGHT = 3508;
+    const BASE_WIDTH = 794;
+    const SCALE = A4_WIDTH / BASE_WIDTH;
+
+    const LEFT = 110;
+    const RIGHT = 720;
+    const TEXT_WIDTH = RIGHT - LEFT;
+
+    const $ = (id) => document.getElementById(id);
+
+    function cleanText(value) {
+      return String(value || '').replace(/[ \t]+/g, ' ').trim();
+    }
+
+    function cleanLine(value) {
+      return cleanText(value).replace(/\n+/g, ' ');
+    }
+
+    function removeTypedPrefix(value, allowedPrefixes) {
+      const text = cleanLine(value);
+      if (!text) return '';
+
+      const parts = text.split(' ');
+      const firstWord = parts[0].toLowerCase().replace(/[.,;:!?]+$/g, '');
+
+      if (allowedPrefixes.includes(firstWord)) {
+        return parts.slice(1).join(' ').trim();
+      }
+
+      return text;
+    }
+
+    function composePlace(prefix, text, allowedPrefixes = [prefix]) {
+      const value = removeTypedPrefix(text, allowedPrefixes);
+      if (!value) return '';
+      return `${prefix} ${value}`;
+    }
+
+    function setFont(size, weight = 'normal') {
+      ctx.font = `${weight} ${size * SCALE}px "Times New Roman", serif`;
+      ctx.fillStyle = '#000';
+      ctx.textBaseline = 'top';
+    }
+
+    function getTextWidth(text, size = 14, weight = 'normal') {
+      setFont(size, weight);
+      return ctx.measureText(text).width / SCALE;
+    }
+
+    function fitFontSize(text, maxWidth, size = 14, minSize = 9, weight = 'normal') {
+      let currentSize = size;
+      while (currentSize > minSize && getTextWidth(text, currentSize, weight) > maxWidth) {
+        currentSize -= 0.5;
+      }
+      return currentSize;
+    }
+
+    function drawText(text, x, y, size = 14, options = {}) {
+      const align = options.align || 'left';
+      const weight = options.weight || 'normal';
+      const lineHeight = options.lineHeight || size * 1.18;
+
+      setFont(size, weight);
+      ctx.textAlign = align;
+      ctx.fillText(text, x * SCALE, y * SCALE);
+      return y + lineHeight;
+    }
+
+    function drawFitText(text, x, y, maxWidth, size = 14, options = {}) {
+      const align = options.align || 'left';
+      const weight = options.weight || 'normal';
+      const minSize = options.minSize || 9;
+      const finalSize = fitFontSize(text, maxWidth, size, minSize, weight);
+
+      setFont(finalSize, weight);
+      ctx.textAlign = align;
+      ctx.fillText(text, x * SCALE, y * SCALE);
+      return y + finalSize * 1.18;
+    }
+
+    function splitLongWord(word, maxWidth, size, weight = 'normal') {
+      const chunks = [];
+      let chunk = '';
+
+      for (const char of word) {
+        const testChunk = chunk + char;
+        if (chunk && getTextWidth(testChunk, size, weight) > maxWidth) {
+          chunks.push(chunk);
+          chunk = char;
+        } else {
+          chunk = testChunk;
+        }
+      }
+
+      if (chunk) chunks.push(chunk);
+      return chunks;
+    }
+
+    function wrapLines(text, maxWidth, size = 14, weight = 'normal') {
+      const source = cleanText(text).split('\n');
+      const result = [];
+
+      source.forEach((paragraph, paragraphIndex) => {
+        const words = paragraph.replace(/[ \t]+/g, ' ').trim().split(' ').filter(Boolean);
+        let line = '';
+
+        words.forEach((word) => {
+          const safeWords = getTextWidth(word, size, weight) > maxWidth
+            ? splitLongWord(word, maxWidth, size, weight)
+            : [word];
+
+          safeWords.forEach((safeWord) => {
+            const testLine = line ? `${line} ${safeWord}` : safeWord;
+
+            if (line && getTextWidth(testLine, size, weight) > maxWidth) {
+              result.push(line);
+              line = safeWord;
+            } else {
+              line = testLine;
+            }
+          });
+        });
+
+        if (line) result.push(line);
+        if (paragraphIndex < source.length - 1) result.push('');
+      });
+
+      return result.length ? result : [''];
+    }
+
+    function drawWrappedText(text, x, y, maxWidth, size = 14, options = {}) {
+      const weight = options.weight || 'normal';
+      const align = options.align || 'left';
+      const lineHeight = options.lineHeight || 18;
+      const maxLines = options.maxLines || Infinity;
+      const centerX = x + maxWidth / 2;
+      const rightX = x + maxWidth;
+      const lines = wrapLines(text, maxWidth, size, weight);
+      const visibleLines = lines.slice(0, maxLines);
+
+      setFont(size, weight);
+      ctx.textAlign = align;
+
+      visibleLines.forEach((line, index) => {
+        let drawX = x;
+        if (align === 'center') drawX = centerX;
+        if (align === 'right') drawX = rightX;
+        ctx.fillText(line, drawX * SCALE, (y + index * lineHeight) * SCALE);
+      });
+
+      return y + visibleLines.length * lineHeight;
+    }
+
+    function drawAddressBlock() {
+      const lines = [
+        'Директору департамента управления',
+        'транспортными ресурсами',
+        'Севостьянову И.В.'
+      ];
+
+      setFont(14);
+      ctx.textAlign = 'right';
+      lines.forEach((line, index) => {
+        ctx.fillText(line, RIGHT * SCALE, (75 + index * 18) * SCALE);
+      });
+    }
+
+    function composeEmailText() {
+      const item = cleanLine($('item').value);
+      const fromPlace = composePlace('из', $('fromPlace').value, ['из']);
+      const toPlace = composePlace('в', $('toPlace').value, ['в']);
+      const ticket = cleanLine($('ticket').value);
+
+      const subject = item ? `Перемещение ${item}` : '';
+
+      const bodyParts = [
+        'Добрый день, прошу организовать перемещение',
+        item,
+        fromPlace,
+        toPlace,
+        ticket ? `по заявке ${ticket}` : ''
+      ].filter(Boolean);
+
+      const body = bodyParts.length > 1 ? `${bodyParts.join(' ')}.` : '';
+
+      return { subject, body };
+    }
+
+    function updateEmailBlock() {
+      const subjectEl = $('emailSubject');
+      const bodyEl = $('emailBody');
+      const { subject, body } = composeEmailText();
+
+      subjectEl.textContent = subject || 'Заполни поле «Что нужно переместить»';
+      bodyEl.textContent = body || 'Заполни поля выше';
+
+      subjectEl.classList.toggle('is-empty', !subject);
+      bodyEl.classList.toggle('is-empty', !body);
+    }
+
+    function copyText(text, fallbackTitle) {
+      if (!text) return;
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).catch(() => {
+          prompt(fallbackTitle, text);
+        });
+      } else {
+        prompt(fallbackTitle, text);
+      }
+    }
+
+    function generateDocument() {
+      const memoNumber = cleanLine($('memoNumber').value);
+      const memoDate = cleanLine($('memoDate').value);
+      const position = cleanLine($('position').value);
+      const fio = cleanLine($('fio').value);
+      const phone = cleanLine($('phone').value);
+      const item = cleanLine($('item').value);
+      const fromPlace = composePlace('из', $('fromPlace').value, ['из']);
+      const toPlace = composePlace('в', $('toPlace').value, ['в']);
+      const ticket = cleanLine($('ticket').value);
+
+      const titleNumber = memoNumber ? `№ ${memoNumber}` : '№';
+      const titleDate = memoDate ? ` от ${memoDate} г.` : ' от';
+      const title = `Служебная записка ${titleNumber}${titleDate}`;
+
+      const bodyParts = [
+        'Директора департамента управления транспортными ресурсами прошу организовать перемещение',
+        item,
+        fromPlace,
+        toPlace,
+        ticket ? `по заявке ${ticket}` : ''
+      ].filter(Boolean);
+
+      const body = `${bodyParts.join(' ')}.`;
+
+      ctx.clearRect(0, 0, A4_WIDTH, A4_HEIGHT);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, A4_WIDTH, A4_HEIGHT);
+
+      drawAddressBlock();
+
+      const titleEndY = drawWrappedText(title, LEFT, 186, TEXT_WIDTH, 14, {
+        align: 'center',
+        lineHeight: 18
+      });
+
+      const bodyY = Math.max(222, titleEndY + 18);
+      const bodyEndY = drawWrappedText(body, LEFT, bodyY, TEXT_WIDTH, 14, {
+        lineHeight: 18
+      });
+
+      const signatureY = Math.max(296, bodyEndY + 38);
+      drawWrappedText(position, LEFT, signatureY, 390, 14, {
+        lineHeight: 18,
+        maxLines: 2
+      });
+      drawFitText(fio, RIGHT, signatureY, 180, 14, {
+        align: 'right',
+        minSize: 9
+      });
+
+      const preparedY = signatureY + 55;
+      drawText('Служебную записку подготовил:', LEFT, preparedY, 14);
+      drawWrappedText(fio, LEFT, preparedY + 18, 260, 14, {
+        lineHeight: 18,
+        maxLines: 2
+      });
+      drawFitText(phone, LEFT, preparedY + 36, 260, 14, {
+        minSize: 9
+      });
+
+      updateEmailBlock();
+    }
+
+    function downloadPng() {
+      generateDocument();
+
+      const memoNumber = cleanLine($('memoNumber').value).replace(/[^a-zA-Zа-яА-Я0-9_-]+/g, '_');
+      const link = document.createElement('a');
+      link.download = `sluzhebnaya_zapiska_${memoNumber || 'a4'}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    $('downloadBtn').addEventListener('click', downloadPng);
+
+    $('copySubjectBtn').addEventListener('click', () => {
+      copyText(composeEmailText().subject, 'Скопируй тему письма:');
+    });
+
+    $('copyBodyBtn').addEventListener('click', () => {
+      copyText(composeEmailText().body, 'Скопируй текст письма:');
+    });
+
+    ['memoNumber', 'memoDate', 'position', 'fio', 'phone', 'item', 'fromPlace', 'toPlace', 'ticket'].forEach((id) => {
+      $(id).addEventListener('input', generateDocument);
+      $(id).addEventListener('change', generateDocument);
+    });
+
+    generateDocument();
+  </script>
+</body>
+</html>

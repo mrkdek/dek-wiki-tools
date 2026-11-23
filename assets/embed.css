@@ -1,0 +1,8 @@
+.dek-sitebar{box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1440px;margin:0 auto;padding:14px 20px;background:#fff;border-bottom:1px solid #dce3e1;font:14px/1.5 system-ui,sans-serif;color:#244b46;position:relative;z-index:2}
+.dek-sitebar a{color:#244b46!important;text-decoration:none;font:600 14px/1.5 system-ui,sans-serif}
+.dek-sitebar button{width:auto!important;margin:0!important;padding:8px 12px!important;border:1px solid #c8d8d3!important;border-radius:7px!important;background:#f4f8f6!important;color:#244b46!important;font:500 14px/1.5 system-ui,sans-serif!important;cursor:pointer}
+.dek-service-note{font:14px/1.5 system-ui,sans-serif!important;color:#626d69!important;margin:8px 0 20px!important}
+.dek-single-tool header,.dek-single-tool #win2000Titlebar{display:none!important}
+.dek-embedded .app{min-height:0!important}
+.dek-embedded .support-form{box-shadow:none}
+@media(max-width:600px){.dek-sitebar{padding:12px;flex-wrap:wrap}.dek-sitebar button{font-size:13px!important}.support-form{max-width:100%!important}body{overflow-wrap:break-word}.dek-sitebar a{font-size:14px!important}}
